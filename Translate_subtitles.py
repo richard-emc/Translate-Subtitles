@@ -14,14 +14,19 @@ def translate_srt():
     with open(filepath, "r") as file:
         lines = file.readlines()
         translator = Translator()
-
-    # Translate line by line and display progress
-    translated_lines = []
-    for i, line in enumerate(lines):
-        label["text"] = f"Translating... {i+1}/{len(lines)}"
+    try: 
+        # Translate line by line and display progress
+        translated_lines = []
+        for i, line in enumerate(lines):
+            label["text"] = f"Translating... {i+1}/{len(lines)}"
+            root.update()
+            translated_line = translator.translate(line, dest='pt').text
+            translated_lines.append(translated_line)
+    except Exception as e:
+        label["text"] = "An error occurred while translating the file. Please try again later."
         root.update()
-        translated_line = translator.translate(line, dest='pt').text
-        translated_lines.append(translated_line)
+        root.after(5000,root.destroy)
+        return
 
     # Save the translated .srt file
     if 'eng' in filepath:
